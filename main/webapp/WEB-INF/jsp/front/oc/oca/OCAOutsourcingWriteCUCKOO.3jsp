@@ -1,0 +1,294 @@
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%><%@include file="/WEB-INF/jsp/include/el.jspf" %>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.inputType4').keyup(function (e){
+			var content = $(this).val();
+			//$(this).height(((content.split('\n').length + 1) * 1.5) + 'em');
+			$('.max_counter').html(content.length + '/250');
+
+			if(content.length == 250){
+				alert('250자만 입력 가능합니다.');
+			}
+		});
+		$('.max_counter').keyup();
+	});
+</script>
+<h2 style="font-size: 36px; color: #333; line-height: 36px; margin-bottom: 50px; font-family: 'NanumSquareB'; font-weight: normal;">${info.title}</h2>
+
+<form name="frm" method="post" action="/outsourcing/insert.do">
+	<input type="hidden" name="b2bStts" value="${info.b2bStts}" />
+	<input type="hidden" name="b2bCd" value="${info.b2bCd}" class="notRequired" />
+	<input type="hidden" name="b2bNm" value="${info.b2bNm}" class="notRequired" />
+
+	<div data-controller="CommonController OutsourcingController">
+		<c:if test="${info.agentInfoYn eq 'Y'}">
+			<p class="titTxt mt40">판매사 정보입력</p>
+			<div class="boardType2 mt15">
+				<table summary="">
+					<caption></caption>
+					<colgroup>
+						<col width="20%" />
+						<col width="80%" />
+					</colgroup>
+					<tbody>
+					<!-- 판매사원 성명 입력란 -->
+					<c:if test="${info.agentEmpNmYn eq 'Y'}">
+						<tr>
+							<th scope="row"><span class="essen" title="필수입력">판매사원 성명</span></th>
+							<td>
+								<input type="text" name="agentEmpNm" title="판매사원명" class="inputType1" maxlength="20" />
+							</td>
+						</tr>
+					</c:if>
+
+					<!-- 판매자 연락처 입력란 -->
+					<c:if test="${info.sllrCtelYn eq 'Y'}">
+						<tr>
+							<th scope="row"><span class="essen" title="필수입력">판매자 연락처</span></th>
+							<td>
+								<input type="text" name="sllrCtel" title="판매자 연락처" class="inputType1 phoneChk" maxlength="13" />
+							</td>
+						</tr>
+					</c:if>
+
+					<!-- 판매자 생년월일 입력란 -->
+					<c:if test="${info.birthDayYn eq 'Y'}">
+						<tr>
+							<th scope="row">
+								<span class="essen" title="필수입력">생년월일</span>
+							</th>
+							<td>
+								<input type="text" name="birthDay" id="birthDay" title="생년월일" class="inputType1 numberChk" maxlength="8" />
+								<span class="red"> * 생년월일은 8자리로 입력해주세요. ex)19580101</span>
+							</td>
+						</tr>
+					</c:if>
+
+					</tbody>
+				</table>
+
+				<!-- 안내사항 표시란 -->
+				<c:if test="${info.infoYn eq 'Y'}">
+					<div id="info" style="white-space:pre-line">
+							${info.info}
+					</div>
+				</c:if>
+			</div>
+		</c:if>
+
+		<c:if test="${info.customerInfoYn eq 'Y'}">
+			<p class="titTxt mt40">고객 정보 입력</p>
+			<div class="boardType2 mt15">
+				<table summary="">
+					<caption></caption>
+					<colgroup>
+						<col width="20%" />
+						<col width="80%" />
+					</colgroup>
+					<tbody>
+
+					<!-- 상품1 선택란 -->
+					<c:if test="${info.prdctNmYn eq 'Y'}">
+						<tr>
+							<th scope="row">
+								<span class="essen" title="필수입력">상품 선택1</span>
+							</th>
+							<td>
+								<select name="prdctCd" title="상품">
+									<option value="">[상품선택]</option>
+									<c:forEach var="list" items="${prdctList.product}">
+										<option value="${list.cd}">${list.cdNm}</option>
+									</c:forEach>
+								</select>
+<%--								<font color="red"><b> ※ 현장즉시결제 장기할부 개월 수(24개월) 기재 필수. </b></font>--%>
+							</td>
+						</tr>
+					</c:if>
+
+					<!-- 상품1 주 계약 -->
+					<c:if test="${info.mainContTypeYn eq 'Y'}">
+						<tr>
+							<th scope="row"><span class="essen" title="상품1 주 계약">상품1 주 계약</span></th>
+							<td>
+								<input type="radio" name="mainContType" value="상조" id="mainContType_1" title="상품1 주 계약" checked> <label for="mainContType_1" >상조</label>&nbsp;&nbsp;
+								<input type="radio" name="mainContType" value="여행" id="mainContType_2" title="상품1 주 계약"> <label for="mainContType_2" >여행</label>&nbsp;&nbsp;
+								<input type="radio" name="mainContType" value="크루즈" id="mainContType_3" title="상품1 주 계약"> <label for="mainContType_3">크루즈</label>&nbsp;&nbsp;
+								<!--  <input type="radio" name="mainContType" value="골프" id="mainContType_4" title="상품1 주 계약"> <label for="mainContType_4" >골프</label> -->
+							</td>
+						</tr>
+					</c:if>
+
+					<!-- 대명 가입번호 입력란 -->
+					<c:if test="${info.idNoYn eq 'Y'}">
+						<tr>
+							<th scope="row"><span class="essen" title="필수입력">렌탈접수번호1</span></th>
+							<td>
+								<input type="text" name="idNo" value="${dmEntrNo}" title="렌탈접수번호1" class="inputType1 numberChk"  />
+							</td>
+						</tr>
+					</c:if>
+
+					<!-- 상품2 선택란 -->
+					<c:if test="${info.prdctNm2Yn eq 'Y'}">
+						<tr>
+							<th scope="row">
+								<span>상품 선택2</span>
+							</th>
+							<td>
+								<select name="prdctCd2" title="상품" class="notRequired">
+									<option value="">[상품선택]</option>
+									<c:forEach var="list" items="${prdctList.product}">
+										<option value="${list.cd}">${list.cdNm}</option>
+									</c:forEach>
+								</select>
+							</td>
+						</tr>
+					</c:if>
+
+					<!-- 상품2 주 계약 -->
+					<c:if test="${info.mainContTypeYn eq 'Y'}">
+						<tr>
+							<th scope="row"><span class="notRequired" title="상품2 주 계약">상품2 주 계약</span></th>
+							<td>
+								<input type="radio" name="mainContType2" value="상조" id="mainContType2_1" title="상품2 주 계약" checked> <label for="mainContType2_1" >상조</label>&nbsp;&nbsp;
+								<input type="radio" name="mainContType2" value="여행" id="mainContType2_2" title="상품2 주 계약"> <label for="mainContType2_2" >여행</label>&nbsp;&nbsp;
+								<input type="radio" name="mainContType2" value="크루즈" id="mainContType2_3" title="상품2 주 계약"> <label for="mainContType2_3">크루즈</label>&nbsp;&nbsp;
+								<!-- <input type="radio" name="mainContType2" value="골프" id="mainContType2_4" title="상품2 주 계약"> <label for="mainContType2_4" >골프</label> -->
+							</td>
+						</tr>
+					</c:if>
+
+					<!-- 대명 가입번호2 입력란 -->
+					<c:if test="${info.idNoYn eq 'Y'}">
+						<tr class="invisible1" >
+							<th scope="row"><span class="" >렌탈접수번호2</span></th>
+							<td>
+								<input id="idNoInput2" type="text" name="idNo2" value="${dmEntrNo2}" title="렌탈접수번호2" class="inputType1 numberChk notRequired"   />
+							</td>
+						</tr>
+					</c:if>
+
+					<!-- 고객명 입력란 -->
+					<c:if test="${info.nameYn eq 'Y'}">
+						<tr>
+							<th scope="row"><span class="essen" title="필수입력">고객명</span></th>
+							<td>
+								<input type="text" name="name" title="고객명" class="inputType1" maxlength="20" />
+							</td>
+						</tr>
+					</c:if>
+
+					<!-- 고객 연락처(핸드폰) 입력란 -->
+					<c:if test="${info.hpYn eq 'Y'}">
+						<tr>
+							<th scope="row"><span class="essen" title="필수입력">고객 연락처(핸드폰)</span></th>
+							<td>
+								<c:if test="${info.telecomYn eq 'Y'}">
+									<select name="telecom" class="inputType2" title="통신사">
+										<option value="">선택하세요.</option>
+										<option value="LGU">LGU+</option>
+										<option value="SKT">SKT</option>
+										<option value="KT">KT</option>
+									</select>
+								</c:if>
+								<input type="text" name="hp" title="고객 연락처" class="inputType1 phoneChk" maxlength="13" />
+							</td>
+						</tr>
+					</c:if>
+
+
+					<!-- 상담 가능 시간대 입력란 -->
+					<c:if test="${info.calltimeYn eq 'Y'}">
+						<tr>
+							<th scope="row"><span class="essen" title="필수입력">상담 가능 시간대</span></th>
+							<td>
+								<select name="calltime" class="inputType1" title="상담 가능 시간대">
+									<option value="">선택해 주세요</option>
+									<option value="10:00 ~ 11:00">10:00 ~ 11:00</option>
+									<option value="11:00 ~ 12:00">11:00 ~ 12:00</option>
+									<option value="12:00 ~ 13:00">12:00 ~ 13:00</option>
+									<option value="13:00 ~ 14:00">13:00 ~ 14:00</option>
+									<option value="14:00 ~ 15:00">14:00 ~ 15:00</option>
+									<option value="15:00 ~ 16:00">15:00 ~ 16:00</option>
+									<option value="16:00 ~ 17:00">16:00 ~ 17:00</option>
+									<option value="17:00 ~ 18:00">17:00 ~ 18:00</option>
+								</select>
+							</td>
+							</td>
+						</tr>
+					</c:if>
+
+					<!-- 메모 입력란 -->
+					<c:if test="${info.memoYn eq 'Y'}">
+						<tr>
+							<th scope="row"><span style="padding-left:0;">메모</span><span style="display: block;font-size: 12px;color: #b12b1d;padding-top: 8px;padding-left:0;">※글자수 250자 제한</span></th>
+							<td>
+								<textarea name="memo" title="메모" class="inputType4 notRequired" style="height:60px;" maxlength="250" placeholder="특이사항 기재"></textarea>
+								<span class="max_counter">0/250</span>
+							</td>
+						</tr>
+					</c:if>
+					</tbody>
+				</table>
+
+				<!-- 고객정보 안내사항 표시란 -->
+				<c:if test="${info.cinfoYn eq 'Y'}">
+					<div id="cinfo" style="white-space:pre-line">
+							${info.cinfo}
+					</div>
+				</c:if>
+			</div>
+		</c:if>
+
+		<!-- 개인 정보 활용 동의 표시란 -->
+		<c:if test="${info.termsYn eq 'Y'}">
+			<div class="termDiv mt40">
+				<p class="tit">개인 정보 수집∙이용 동의 (필수)</p>
+				<button type="button" class="check checkBtn">
+					<strong>동의합니다.</strong>
+					<img src="/common/images/btn/check_bt.gif" alt="체크">
+				</button>
+				<input type="checkbox" name="agree" class="agree" style="display:none" />
+
+				<div class="termBox">
+						${info.terms}
+				</div>
+			</div>
+
+			<div class="termDiv mt40">
+			<p class="tit">개인 정보의 제3자 제공 동의</p>
+			<button type="button" class="check checkBtn">
+				<strong>동의합니다.</strong>
+				<img src="/common/images/btn/check_bt.gif" alt="체크">
+			</button>
+			<input type="checkbox" name="thrd_sppl_agree" class="agree" style="display:none" />
+			<div class="termBox">
+				<p><b>[쿠쿠라이프 판매사 정보 확인 및 시책금 지급을 위한 개인정보 수집, 이용 및 제3자 제공 동의서]</b>
+					<br><b>주식회사 대명스테이션은 쿠쿠라이프 상품과 관련하여 아래와 같이 개인정보를 수집, 이용 및 제3자 제공하고자 합니다.</b>
+					<br>
+					<br>1. 개인(신용)정보 수집, 이용 내역
+					<br>(1) 수집/이용자 : 주식회사 대명스테이션
+					<br>(2) 수집/이용 개인정보 항목 : 성명, 연락처(휴대전화번호), 생년월일, C.I값
+					<br>(3) 수집/이용 목적 : 대명과 쿠쿠홈시스의 업무제휴에 따른 쿠쿠홈시스 영업사원 시책 대상자 검증 및 시책금 지급
+					<br>(4) 보유기간 : 수집/이용 동의일로부터 30일 또는 수집/이용 목적 달성 시까지
+					<br>* 고객님은 위의 개인정보 수집, 이용에 대한 동의를 거부하실 수 있습니다. 그러나 동의를 거부할 경우 시책금 지급에 제한 받을 수 있습니다.
+					<br>
+					<br>2. 개인(신용)정보 취급업무 제3자 제공 내역
+					<br>(1) 수집/이용자 : 주식회사 대명스테이션
+					<br>(2) 개인(신용)정보 제공 목적 : 대명과 쿠쿠홈시스의 업무제휴에 따른 쿠쿠홈시스 영업사원 시책 대상자 검증 및 시책금 지급
+					<br>(3) 제공 대상 개인(신용)정보 : C.I값, 시책금, 대명관리일련번호
+					<br>(4) 제공 받는 자의 개인(신용)정보 보유 및 이용기간 :
+					<br>&nbsp;-C.I값 : 동의일(동의일 포함)로부터 시책금 지급 후 3개월까지
+					<br>&nbsp;-시책금, 대명관리일련번호 : 동의일(동의일 포함)로부터 시책금 지급 후 5년까지
+					<br>* 고객님은 위의 개인정보 취급업무 위탁에 대한 동의를 거부하실 수 있습니다. 그러나 동의를 거부할 경우 시책금 지급에 제한 받을 수 있습니다.
+				</p>
+			</div>
+		</div>
+		</c:if>
+
+		<div class="mt30 taC">
+			<a href="javascript:" class="btnRed" id="submit">신청</a>
+			<input type="submit" style="display:none" />
+		</div>
+	</div>
+</form>
